@@ -192,9 +192,8 @@ const config: Config = {
   coverageProvider: 'v8',
   clearMocks: true,
   moduleNameMapper: {
-    '^src/(.*)$': '<rootDir>/src/$1',
-    '^core/(.*)$': '<rootDir>/src/core/$1',
-    '^modules/(.*)$': '<rootDir>/src/modules/$1',
+    '^@core/(.*)$': '<rootDir>/src/core/$1',
+    '^@modules/(.*)$': '<rootDir>/src/modules/$1',
   },
 };
 
