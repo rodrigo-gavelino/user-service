@@ -1,13 +1,15 @@
 import * as bcrypt from 'bcrypt';
-import HashingService from '../interfaces/hash-service.interface';
+import IHashingService from '../interfaces/hash-service.interface';
 
-class HashingServiceImpl implements HashingService {
+class HashingServiceImpl implements IHashingService {
+  constructor(private readonly crypt: typeof bcrypt) {}
+
   async hash(data: string, saltOrRounds: number): Promise<string> {
-    return bcrypt.hash(data, saltOrRounds);
+    return this.crypt.hash(data, saltOrRounds);
   }
 
   async compare(data: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(data, hash);
+    return this.crypt.compare(data, hash);
   }
 }
 

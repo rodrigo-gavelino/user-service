@@ -1,5 +1,5 @@
 import Email from '../value-objects/email.vo';
-import Password from '../value-objects/password.vo';
+import { Password } from '../value-objects/password.vo';
 
 type UserConstructorProps = {
   name: string;
@@ -11,6 +11,7 @@ type UserConstructorProps = {
 export { UserConstructorProps };
 
 type UserCreateCommandProps = {
+  id?: string;
   name: string;
   email: Email;
   password: Password;
@@ -19,6 +20,7 @@ type UserCreateCommandProps = {
 export { UserCreateCommandProps };
 
 class User {
+  private _id?: string;
   private _name: string;
   private _email: Email;
   private _password: Password;
@@ -43,6 +45,10 @@ class User {
 
   get email(): Email {
     return this._email;
+  }
+
+  get id(): string | undefined {
+    return this._id;
   }
 
   get password(): Password {

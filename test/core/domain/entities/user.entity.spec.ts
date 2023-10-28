@@ -3,7 +3,7 @@ import User, {
   UserCreateCommandProps,
 } from '@core/domain/entities/user.entity';
 import Email from '@core/domain/value-objects/email.vo';
-import Password from '@core/domain/value-objects/password.vo';
+import { Password } from '@core/domain/value-objects/password.vo';
 
 describe('User Entity', () => {
   const validEmail = Email.create('test@example.com');

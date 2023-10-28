@@ -1,8 +1,8 @@
 // interfaces/HashingService.ts
 
-interface HashingService {
+interface IHashingService {
   hash(data: string, saltOrRounds: number): Promise<string>;
   compare(data: string, hash: string): Promise<boolean>;
 }
 
-export default HashingService;
+export default IHashingService;

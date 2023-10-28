@@ -1,0 +1,63 @@
+src/
+├── core
+│   ├── application
+│   │   ├── commands
+│   │   │   └── sign-up.command.ts
+│   │   ├── handlers
+│   │   │   ├── handlers.ts
+│   │   │   └── sign-up.handler.ts
+│   │   ├── queries
+│   │   │   └── queries.ts
+│   │   └── usecases
+│   │       └── sign-up
+│   │           ├── sign-up.usecase.impl.ts
+│   │           └── sign-up.usecase.interface.ts
+│   ├── domain
+│   │   ├── aggregates
+│   │   │   └── aggregates.ts
+│   │   ├── entities
+│   │   │   └── user.entity.ts
+│   │   ├── events
+│   │   │   └── events.ts
+│   │   ├── repositories
+│   │   │   └── user.interface.repository.ts
+│   │   └── value-objects
+│   │       ├── email.vo.ts
+│   │       └── password.vo.ts
+│   ├── infrastructure
+│   │   ├── database
+│   │   │   ├── mappers
+│   │   │   │   └── user.mapper.ts
+│   │   │   ├── repositories
+│   │   │   │   └── user.repository.ts
+│   │   │   └── schemas
+│   │   │       └── user.schema.ts
+│   │   ├── event-store
+│   │   │   └── event-store.ts
+│   │   └── messaging
+│   │       └── messaging.ts
+│   └── shared
+│       ├── abstracts
+│       │   └── value-object.ts
+│       ├── interfaces
+│       │   ├── command-handler.interface.ts
+│       │   ├── hash-service.interface.ts
+│       │   ├── usercase.ts
+│       │   └── user-service.interface.repository.ts
+│       ├── shared.ts
+│       └── utils
+│           └── hash-service.impl.ts
+├── main.ts
+└── modules
+    ├── app.controller.ts
+    ├── app.module.ts
+    ├── app.service.ts
+    └── auth
+        ├── auth.controller.ts
+        ├── auth.module.ts
+        ├── auth.service.ts
+        └── dto
+            ├── create-auth.dto.ts
+            └── update-auth.dto.ts
+
+28 directories, 33 files
