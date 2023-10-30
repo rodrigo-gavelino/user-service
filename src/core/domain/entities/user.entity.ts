@@ -2,6 +2,7 @@ import Email from '../value-objects/email.vo';
 import { Password } from '../value-objects/password.vo';
 
 type UserConstructorProps = {
+  _id?: string;
   name: string;
   email: Email;
   password: Password;
@@ -11,7 +12,7 @@ type UserConstructorProps = {
 export { UserConstructorProps };
 
 type UserCreateCommandProps = {
-  id?: string;
+  _id?: string;
   name: string;
   email: Email;
   password: Password;
@@ -28,6 +29,7 @@ class User {
   private _isActive: boolean;
 
   constructor(props: UserConstructorProps) {
+    this._id = props._id;
     this._name = props.name;
     this._email = props.email;
     this._password = props.password;
@@ -36,6 +38,30 @@ class User {
   }
 
   static create(props: UserCreateCommandProps): User {
+    const regexContainsNumber = /\d/;
+    const regexSpecialCharacters = /[^a-zA-Z\s]/;
+
+    if (!props.name) {
+      throw new InvalidUserNameError('Name must not be empty.');
+    }
+    const nameSIze = props.name.trim().length || 0;
+
+    if (nameSIze < 3 || nameSIze > 20) {
+      throw new InvalidUserNameError(
+        'Name must be between 3 and 20 characters.',
+      );
+    }
+
+    if (regexContainsNumber.test(props.name)) {
+      throw new InvalidUserNameError('Name must not contain numbers.');
+    }
+
+    if (regexSpecialCharacters.test(props.name)) {
+      throw new InvalidUserNameError(
+        'Name must not contain special characters.',
+      );
+    }
+
     return new User(props);
   }
 

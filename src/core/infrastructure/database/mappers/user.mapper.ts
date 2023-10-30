@@ -19,7 +19,7 @@ class UserMapper {
     const passwordVO = await Password.create(userDoc.password);
 
     return User.create({
-      id: userDoc._id.toString(),
+      _id: userDoc._id.toString(),
       name: userDoc.name,
       email: emailVO,
       password: passwordVO,

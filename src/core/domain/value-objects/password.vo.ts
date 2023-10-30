@@ -11,6 +11,10 @@ export class Password extends ValueObject<string> {
   }
 
   private validate() {
+    if (!this.value) {
+      throw new InvalidPasswordError('Password cannot be empty.');
+    }
+
     if (this.value.length < 8) {
       throw new InvalidPasswordError(
         'Password must have at least 8 characters.',

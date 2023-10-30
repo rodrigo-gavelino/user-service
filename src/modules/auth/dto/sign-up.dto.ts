@@ -7,21 +7,27 @@ import {
 } from 'class-validator';
 
 class SignUpDto {
-  @IsString()
-  @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
   @MinLength(8)
   @MaxLength(20)
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }
 
+class SignUpResponseDto {
+  _id: string;
+  email: string;
+}
+
 export default SignUpDto;
+export { SignUpResponseDto };
