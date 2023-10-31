@@ -9,6 +9,10 @@ import HashingServiceImpl from '@core/shared/utils/hash-service.impl';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { KafkaMessagingService } from '@core/infrastructure/messaging/kafka-messaging.service';
+import SendEmailWhenAnUserIsCreatedHandler from '@core/domain/events/user/handler/send-email-when-an-user-is-created.handler';
+import UserCreatedEvent from '@core/domain/events/user/user-created.event';
+import EventDispatcher from '@core/domain/events/event-dispatcher';
 
 export const REPOSITORIES = {
   USER_REPOSITORY: {
@@ -40,11 +44,10 @@ export const SERVICES = {
     provide: 'HashingService',
     useFactory: () => new HashingServiceImpl(bcrypt),
   },
-};
-
-export const HASHING_SERVICE_PROVIDER = {
-  provide: 'HashingService',
-  useClass: HashingServiceImpl,
+  KAFKA_MESSAGING_SERVICE: {
+    provide: 'KafkaMessagingService',
+    useFactory: () => new KafkaMessagingService(['kafka:9092']),
+  },
 };
 
 export const HANDLERS = {
@@ -54,12 +57,30 @@ export const HANDLERS = {
       new SignUpHandler(signupUsecase),
     inject: [USECASES.SIGN_UP_USECASE.provide], // Isso se refere ao SignUpUseCase fornecido anteriormente.
   },
+  SEND_EMAIL_HANDLER: {
+    provide: 'SendEmailWhenAnUserIsCreatedHandler',
+    useFactory: (kafkaService: KafkaMessagingService) =>
+      new SendEmailWhenAnUserIsCreatedHandler(kafkaService),
+    inject: [SERVICES.KAFKA_MESSAGING_SERVICE.provide],
+  },
+};
+
+export const EVENTS = {
+  EVENT_DISPATCHER: {
+    provide: 'IEventDispatcher',
+    useClass: EventDispatcher,
+  },
+
+  USER_CREATED_EVENT: {
+    provide: 'UserCreatedEvent',
+    useFactory: (event: any) => new UserCreatedEvent(event),
+  },
 };
 
 export const AUTH_PROVIDERS = {
   REPOSITORIES, // Não esqueça de importar isso do arquivo anterior
   USECASES,
-  HASHING_SERVICE_PROVIDER,
   HANDLERS,
   SERVICES,
+  EVENTS,
 };

@@ -34,6 +34,7 @@ import { JwtStrategy } from './jwt.strategy';
     ...Object.values(AUTH_PROVIDERS.USECASES),
     ...Object.values(AUTH_PROVIDERS.HANDLERS),
     ...Object.values(AUTH_PROVIDERS.SERVICES),
+    ...Object.values(AUTH_PROVIDERS.EVENTS),
   ],
   exports: [JwtStrategy, PassportModule],
 })
