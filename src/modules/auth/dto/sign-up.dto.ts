@@ -27,6 +27,7 @@ class SignUpDto {
 class SignUpResponseDto {
   _id: string;
   email: string;
+  token?: string;
 }
 
 export default SignUpDto;

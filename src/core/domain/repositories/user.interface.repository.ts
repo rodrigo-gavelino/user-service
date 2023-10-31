@@ -1,4 +1,4 @@
-import IUserServiceRepository from '@core/shared/interfaces/user-service.interface.repository';
+import IUserServiceRepository from '@core/shared/domain/repositories/user-service.interface.repository';
 import User from '../entities/user.entity';
 import Email from '../value-objects/email.vo';
 
