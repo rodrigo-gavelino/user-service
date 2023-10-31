@@ -13,7 +13,7 @@ export class AuthService {
 
   async signUp(signUpDto: SignUpDto): Promise<SignUpResponseDto> {
     const result = await this.signUpHandler.handle(signUpDto);
-    const token = await this.jwtService.signAsync({ _id: result._id });
+    const token = this.jwtService.sign({ _id: result._id });
     return {
       _id: result._id,
       email: result.email,

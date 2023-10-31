@@ -20,7 +20,7 @@ import { JwtStrategy } from './jwt.strategy';
         return {
           secret,
           signOptions: {
-            expiresIn: configService.get<string | number>('JWT_EXPIRES_IN'),
+            expiresIn: configService.get<string | number>('JWT_EXPIRES'),
           },
         };
       },
@@ -29,6 +29,7 @@ import { JwtStrategy } from './jwt.strategy';
   controllers: [AuthController],
   providers: [
     AuthService,
+    JwtStrategy,
     ...Object.values(AUTH_PROVIDERS.REPOSITORIES),
     ...Object.values(AUTH_PROVIDERS.USECASES),
     ...Object.values(AUTH_PROVIDERS.HANDLERS),
