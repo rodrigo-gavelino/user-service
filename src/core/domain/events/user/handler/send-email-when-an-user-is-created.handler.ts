@@ -9,7 +9,7 @@ class SendEmailWhenAnUserIsCreatedHandler
   constructor(private readonly messagingService: IMessagingService) {}
 
   handle(event: IEvent): void {
-    this.messagingService.produce('user-created', event.eventData);
+    this.messagingService.produce('UserCreatedEvent', event.eventData);
   }
 }
 

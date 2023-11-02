@@ -4,6 +4,8 @@ services:
   user-service:
     build: .
     command: ./.docker/start.sh
+    networks:
+      - partyu_network
     ports:
       - '3000:3000'
     volumes:
@@ -13,10 +15,16 @@ services:
 
   mongodb:
     image: mongo:latest
+    networks:
+      - partyu_network
     ports:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+
+networks:
+  partyu_network:
+    external: true
 
 volumes:
   mongodb_data:
