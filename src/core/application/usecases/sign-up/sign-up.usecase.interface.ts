@@ -1,5 +1,3 @@
-// src/core/application/usecases/sign-up/sign-up.use-case.interface.ts
-
 import IUsecase from '@core/shared/application/usercase.interface';
 
 export interface SignUpUsecaseInput {

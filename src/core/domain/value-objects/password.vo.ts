@@ -33,7 +33,6 @@ export class Password extends ValueObject<string> {
       );
     }
 
-    // Define a regex for special characters. This example includes common ones, but you can adjust as needed.
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(this.value)) {
       throw new InvalidPasswordError(
         'Password must contain at least 1 special character.',

@@ -4,7 +4,6 @@ src/
 │   │   ├── commands
 │   │   │   └── sign-up.command.ts
 │   │   ├── handlers
-│   │   │   ├── handlers.ts
 │   │   │   └── sign-up.handler.ts
 │   │   ├── queries
 │   │   │   └── queries.ts
@@ -18,7 +17,15 @@ src/
 │   │   ├── entities
 │   │   │   └── user.entity.ts
 │   │   ├── events
-│   │   │   └── events.ts
+│   │   │   ├── event-dispatcher.ts
+│   │   │   ├── @shared
+│   │   │   │   ├── event-dispatcher.interface.ts
+│   │   │   │   ├── event-handler.interface.ts
+│   │   │   │   └── event.interface.ts
+│   │   │   └── user
+│   │   │       ├── handler
+│   │   │       │   └── send-email-when-an-user-is-created.handler.ts
+│   │   │       └── user-created.event.ts
 │   │   ├── repositories
 │   │   │   └── user.interface.repository.ts
 │   │   └── value-objects
@@ -35,16 +42,19 @@ src/
 │   │   ├── event-store
 │   │   │   └── event-store.ts
 │   │   └── messaging
-│   │       └── messaging.ts
+│   │       └── kafka-messaging.service.ts
 │   └── shared
 │       ├── abstracts
 │       │   └── value-object.ts
-│       ├── interfaces
+│       ├── application
 │       │   ├── command-handler.interface.ts
+│       │   └── usercase.interface.ts
+│       ├── domain
+│       │   └── repositories
+│       │       └── user-service.interface.repository.ts
+│       ├── interfaces
 │       │   ├── hash-service.interface.ts
-│       │   ├── usercase.ts
-│       │   └── user-service.interface.repository.ts
-│       ├── shared.ts
+│       │   └── messaging.interface.ts
 │       └── utils
 │           └── hash-service.impl.ts
 ├── main.ts
@@ -55,9 +65,12 @@ src/
     └── auth
         ├── auth.controller.ts
         ├── auth.module.ts
+        ├── auth.providers.ts
         ├── auth.service.ts
-        └── dto
-            ├── create-auth.dto.ts
-            └── update-auth.dto.ts
+        ├── dto
+        │   └── sign-up.dto.ts
+        ├── exception-filters
+        │   └── sign-up-exceptions-filter.ts
+        └── jwt.strategy.ts
 
-28 directories, 33 files
+35 directories, 39 files

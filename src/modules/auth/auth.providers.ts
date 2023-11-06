@@ -13,6 +13,7 @@ import { KafkaMessagingService } from '@core/infrastructure/messaging/kafka-mess
 import SendEmailWhenAnUserIsCreatedHandler from '@core/domain/events/user/handler/send-email-when-an-user-is-created.handler';
 import UserCreatedEvent from '@core/domain/events/user/user-created.event';
 import EventDispatcher from '@core/domain/events/event-dispatcher';
+import { RabbitMQMessagingService } from '@core/infrastructure/messaging/rabbit-mq-messaging.service';
 
 export const REPOSITORIES = {
   USER_REPOSITORY: {
@@ -48,6 +49,11 @@ export const SERVICES = {
     provide: 'KafkaMessagingService',
     useFactory: () => new KafkaMessagingService(['kafka:9092']),
   },
+  RABBITMQ_MESSAGING_SERVICE: {
+    provide: 'RabbitMQMessagingService',
+    useFactory: () =>
+      new RabbitMQMessagingService(['amqp://user:password@rabbitmq:5672']),
+  },
 };
 
 export const HANDLERS = {
@@ -55,13 +61,13 @@ export const HANDLERS = {
     provide: 'SignUpHandler',
     useFactory: (signupUsecase: ISignUpUseCase) =>
       new SignUpHandler(signupUsecase),
-    inject: [USECASES.SIGN_UP_USECASE.provide], // Isso se refere ao SignUpUseCase fornecido anteriormente.
+    inject: [USECASES.SIGN_UP_USECASE.provide],
   },
   SEND_EMAIL_HANDLER: {
     provide: 'SendEmailWhenAnUserIsCreatedHandler',
-    useFactory: (kafkaService: KafkaMessagingService) =>
-      new SendEmailWhenAnUserIsCreatedHandler(kafkaService),
-    inject: [SERVICES.KAFKA_MESSAGING_SERVICE.provide],
+    useFactory: (rabbitMqService: RabbitMQMessagingService) =>
+      new SendEmailWhenAnUserIsCreatedHandler(rabbitMqService),
+    inject: [SERVICES.RABBITMQ_MESSAGING_SERVICE.provide],
   },
 };
 
@@ -78,7 +84,7 @@ export const EVENTS = {
 };
 
 export const AUTH_PROVIDERS = {
-  REPOSITORIES, // Não esqueça de importar isso do arquivo anterior
+  REPOSITORIES,
   USECASES,
   HANDLERS,
   SERVICES,

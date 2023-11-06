@@ -18,7 +18,6 @@ export class SignUpExceptionsFilter implements ExceptionFilter {
     let errorMessage = exception.message;
     const errorType = 'Bad Request';
 
-    // Se você quiser customizar a resposta baseado no tipo de exceção
     if (exception instanceof InvalidUserNameError) {
       errorMessage = exception.message;
     } else if (exception instanceof InvalidEmailError) {

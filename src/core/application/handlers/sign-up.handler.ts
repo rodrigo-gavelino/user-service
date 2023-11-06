@@ -1,5 +1,3 @@
-// src/core/application/handlers/signup.handler.ts
-
 import ICommandHandler from '@core/shared/application/command-handler.interface';
 import { SignUpCommand } from '../commands/sign-up.command';
 import {

@@ -31,7 +31,7 @@ export class UserRepository implements IUserRepository {
     const updatedUser = await this.userModel
       .findByIdAndUpdate(id, userDTO, { new: true })
       .exec();
-    if (!updatedUser) throw new Error('User not found'); // Você pode manejar essa situação conforme sua preferência
+    if (!updatedUser) throw new Error('User not found');
     return UserMapper.toDomain(updatedUser);
   }
 

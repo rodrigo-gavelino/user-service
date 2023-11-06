@@ -111,8 +111,8 @@ class User {
   equals(other: User): boolean {
     return (
       this._name === other._name &&
-      this._email.equals(other._email) && // Usando o método equals do VO Email
-      this._password.equals(other._password) && // Usando o método equals do VO Password
+      this._email.equals(other._email) &&
+      this._password.equals(other._password) &&
       this._emailVerified === other._emailVerified &&
       this._isActive === other._isActive
     );
