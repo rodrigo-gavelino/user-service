@@ -8,10 +8,14 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { EventStoreSchema } from '@core/infrastructure/event-store/schemas/event-store.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserMongooseModel }]),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserMongooseModel },
+      { name: 'EventStore', schema: EventStoreSchema },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],

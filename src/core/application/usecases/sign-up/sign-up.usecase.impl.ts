@@ -1,5 +1,3 @@
-// src/core/application/usecases/sign-up/sign-up.use-case.impl.ts
-
 import IUserRepository from '@core/domain/repositories/user.interface.repository';
 import Email, { InvalidEmailError } from '@core/domain/value-objects/email.vo';
 import User from '@core/domain/entities/user.entity';

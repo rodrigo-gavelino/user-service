@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import IEventDispatcher from '@core/domain/events/@shared/event-dispatcher.interface';
 import SendEmailWhenAnUserIsCreatedHandler from '@core/domain/events/user/handler/send-email-when-an-user-is-created.handler';
 import UserCreatedEvent from '@core/domain/events/user/user-created.event';
+import { EventStoreRepository } from '@core/infrastructure/event-store/repositories/event-store.repository';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,8 @@ export class AuthService {
     @Inject('SignUpHandler')
     private readonly signUpHandler: SignUpHandler,
     private readonly jwtService: JwtService,
+    @Inject('EventStoreRepository')
+    private readonly eventStorerepository: EventStoreRepository,
     @Inject('IEventDispatcher')
     private readonly eventDispatcher: IEventDispatcher,
     @Inject('SendEmailWhenAnUserIsCreatedHandler')
@@ -30,6 +33,7 @@ export class AuthService {
         email: result.email,
         token: token,
       });
+      await this.eventStorerepository.saveEvent(event);
 
       this.eventDispatcher.notify(event);
     }

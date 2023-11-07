@@ -14,6 +14,8 @@ import SendEmailWhenAnUserIsCreatedHandler from '@core/domain/events/user/handle
 import UserCreatedEvent from '@core/domain/events/user/user-created.event';
 import EventDispatcher from '@core/domain/events/event-dispatcher';
 import { RabbitMQMessagingService } from '@core/infrastructure/messaging/rabbit-mq-messaging.service';
+import { EventStoreRepository } from '@core/infrastructure/event-store/repositories/event-store.repository';
+import { EventStoreDocument } from '@core/infrastructure/event-store/schemas/event-store.schema';
 
 export const REPOSITORIES = {
   USER_REPOSITORY: {
@@ -26,6 +28,17 @@ export const REPOSITORIES = {
       return new UserRepository(userModel);
     },
     inject: [getModelToken('User')],
+  },
+  EVENT_STORE_REPOSITORY: {
+    provide: 'EventStoreRepository',
+    useExisting: EventStoreRepository,
+  },
+  EVENT_STORE_REPOSITORY_IMPL: {
+    provide: EventStoreRepository,
+    useFactory: (eventStoreModel: Model<EventStoreDocument>) => {
+      return new EventStoreRepository(eventStoreModel);
+    },
+    inject: [getModelToken('EventStore')],
   },
 };
 
@@ -52,7 +65,10 @@ export const SERVICES = {
   RABBITMQ_MESSAGING_SERVICE: {
     provide: 'RabbitMQMessagingService',
     useFactory: () =>
-      new RabbitMQMessagingService(['amqp://user:password@rabbitmq:5672']),
+      new RabbitMQMessagingService(
+        ['amqp://user:password@rabbitmq:5672'],
+        'user-created',
+      ),
   },
 };
 
