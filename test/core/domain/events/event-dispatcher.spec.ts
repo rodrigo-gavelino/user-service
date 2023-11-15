@@ -1,80 +1,66 @@
+import IEventHandler from '@core/domain/events/@shared/event-handler.interface';
+import IEvent from '@core/domain/events/@shared/event.interface';
 import EventDispatcher from '@core/domain/events/event-dispatcher';
-import SendEmailWhenAnUserIsCreatedHandler from '@core/domain/events/user/handler/send-email-when-an-user-is-created.handler';
-import UserCreatedEvent from '@core/domain/events/user/user-created.event';
 
-describe('Domain Event Dispatcher', () => {
-  it('should register an event handler', () => {
-    const eventDispatcher = new EventDispatcher();
-    const eventHandler = new SendEmailWhenAnUserIsCreatedHandler();
+class MockEvent implements IEvent {
+  dataTimeOccurred: Date = new Date();
+  eventData: any;
+}
 
-    eventDispatcher.register('UserCreatedEvent', eventHandler);
+class MockEventHandler implements IEventHandler<MockEvent> {
+  handle = jest.fn();
+}
 
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent']).toBeDefined();
+describe('EventDispatcher', () => {
+  let eventDispatcher: EventDispatcher;
+  let mockEventHandler: MockEventHandler;
 
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent'].length).toBe(1);
-
-    expect(
-      eventDispatcher.getEventHandlers['UserCreatedEvent'][0],
-    ).toMatchObject(eventHandler);
+  beforeEach(() => {
+    eventDispatcher = new EventDispatcher();
+    mockEventHandler = new MockEventHandler();
   });
 
-  it('should unregister an event handler', () => {
-    const eventDispatcher = new EventDispatcher();
-    const eventHandler = new SendEmailWhenAnUserIsCreatedHandler();
-
-    eventDispatcher.register('UserCreatedEvent', eventHandler);
-
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent']).toBeDefined();
-
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent'].length).toBe(1);
-
-    expect(
-      eventDispatcher.getEventHandlers['UserCreatedEvent'][0],
-    ).toMatchObject(eventHandler);
-
-    eventDispatcher.unregister('UserCreatedEvent', eventHandler);
-
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent'].length).toBe(0);
-  });
-
-  it('should unregister all event handlers', () => {
-    const eventDispatcher = new EventDispatcher();
-    const eventHandler = new SendEmailWhenAnUserIsCreatedHandler();
-
-    eventDispatcher.register('UserCreatedEvent', eventHandler);
-
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent']).toBeDefined();
-
-    expect(eventDispatcher.getEventHandlers['UserCreatedEvent'].length).toBe(1);
-
-    expect(
-      eventDispatcher.getEventHandlers['UserCreatedEvent'][0],
-    ).toMatchObject(eventHandler);
-
-    eventDispatcher.unregisterAll();
-
-    expect(
-      eventDispatcher.getEventHandlers['UserCreatedEvent'],
-    ).toBeUndefined();
-  });
-
-  it('should notify an event', () => {
-    const eventDispatcher = new EventDispatcher();
-    const eventHandler = new SendEmailWhenAnUserIsCreatedHandler();
-    const spyEventHandler = jest.spyOn(eventHandler, 'handle');
-
-    eventDispatcher.register('UserCreatedEvent', eventHandler);
-
-    expect(
-      eventDispatcher.getEventHandlers['UserCreatedEvent'][0],
-    ).toMatchObject(eventHandler);
-
-    const userCreatedEvent = new UserCreatedEvent({
-      name: '',
-      email: '',
+  describe('register method', () => {
+    it('should register an event handler correctly', () => {
+      eventDispatcher.register('MockEvent', mockEventHandler);
+      expect(eventDispatcher.getEventHandlers['MockEvent']).toContain(
+        mockEventHandler,
+      );
     });
-    eventDispatcher.notify(userCreatedEvent);
+  });
 
-    expect(spyEventHandler).toHaveBeenCalled();
+  describe('unregister method', () => {
+    it('should unregister an event handler correctly', () => {
+      eventDispatcher.register('MockEvent', mockEventHandler);
+      eventDispatcher.unregister('MockEvent', mockEventHandler);
+      expect(eventDispatcher.getEventHandlers['MockEvent']).not.toContain(
+        mockEventHandler,
+      );
+    });
+  });
+
+  describe('unregisterAll method', () => {
+    it('should unregister all event handlers', () => {
+      eventDispatcher.register('MockEvent', mockEventHandler);
+      eventDispatcher.unregisterAll();
+      expect(eventDispatcher.getEventHandlers['MockEvent']).toBeUndefined();
+    });
+  });
+
+  describe('notify method', () => {
+    it('should notify the appropriate event handler', () => {
+      const mockEvent = new MockEvent();
+      eventDispatcher.register('MockEvent', mockEventHandler);
+      eventDispatcher.notify(mockEvent);
+      expect(mockEventHandler.handle).toHaveBeenCalledWith(mockEvent);
+    });
+
+    it('should not notify unregistered event handlers', () => {
+      const mockEvent = new MockEvent();
+      eventDispatcher.register('MockEvent', mockEventHandler);
+      eventDispatcher.unregister('MockEvent', mockEventHandler);
+      eventDispatcher.notify(mockEvent);
+      expect(mockEventHandler.handle).not.toHaveBeenCalled();
+    });
   });
 });

@@ -1,32 +1,77 @@
 import Email, { InvalidEmailError } from '@core/domain/value-objects/email.vo';
 
-describe('Email Value Object', () => {
-  it('should create a valid email', () => {
-    const email = Email.create('test@example.com');
-    expect(email.value).toBe('test@example.com');
+// Dados de exemplo para testes
+const validEmail = 'example@example.com';
+const longString = 'a'.repeat(256); // String longa para testar limites de comprimento
+
+describe('Email Creation', () => {
+  it('should create an Email object with a valid email', () => {
+    expect(() => Email.create(validEmail)).not.toThrow();
+    const email = Email.create(validEmail);
+    expect(email).toBeInstanceOf(Email);
+    expect(email.value).toBe(validEmail);
+  });
+});
+
+describe('Email Validation', () => {
+  it('should throw InvalidEmailError for empty email', () => {
+    expect(() => Email.create('')).toThrow(InvalidEmailError);
   });
 
-  it('should throw error for invalid email (no @)', () => {
-    expect(() => Email.create('testexample.com')).toThrow(InvalidEmailError);
+  it('should throw InvalidEmailError for missing local part', () => {
+    expect(() => Email.create('@example.com')).toThrow(InvalidEmailError);
   });
 
-  it('should throw error for invalid email (invalid characters)', () => {
-    expect(() => Email.create('test@exa$mple.com')).toThrow(InvalidEmailError);
+  it('should throw InvalidEmailError for missing domain', () => {
+    expect(() => Email.create('example@')).toThrow(InvalidEmailError);
   });
 
-  it('should throw error for invalid email (consecutive periods in domain)', () => {
-    expect(() => Email.create('test@example..com')).toThrow(InvalidEmailError);
+  it('should throw InvalidEmailError for excessive local part length', () => {
+    expect(() => Email.create(`${longString}@example.com`)).toThrow(
+      InvalidEmailError,
+    );
   });
 
-  it('should correctly compare two different emails', () => {
-    const emailA = Email.create('testA@example.com');
-    const emailB = Email.create('testB@example.com');
-    expect(emailA.equals(emailB)).toBe(false);
+  it('should throw InvalidEmailError for excessive domain length', () => {
+    expect(() => Email.create(`example@${longString}.com`)).toThrow(
+      InvalidEmailError,
+    );
   });
 
-  it('should correctly compare two same emails', () => {
-    const emailA = Email.create('testA@example.com');
-    const emailC = Email.create('testA@example.com');
-    expect(emailA.equals(emailC)).toBe(true);
+  it('should throw InvalidEmailError for total length over 320 characters', () => {
+    const veryLongEmail = `${longString}@${longString}.com`;
+    expect(() => Email.create(veryLongEmail)).toThrow(InvalidEmailError);
+  });
+
+  it('should throw InvalidEmailError for invalid email format', () => {
+    const invalidEmails = [
+      'example.com',
+      'example@.com',
+      'exa mple@example.com',
+      'example@example..com',
+    ];
+    invalidEmails.forEach((email) => {
+      expect(() => Email.create(email)).toThrow(InvalidEmailError);
+    });
+  });
+
+  it('should throw InvalidEmailError for domain with consecutive periods', () => {
+    expect(() => Email.create('example@exa..mple.com')).toThrow(
+      InvalidEmailError,
+    );
+  });
+});
+
+describe('Email Equality', () => {
+  it('should return true for equal emails', () => {
+    const email1 = Email.create(validEmail);
+    const email2 = Email.create(validEmail);
+    expect(email1.equals(email2)).toBe(true);
+  });
+
+  it('should return false for different emails', () => {
+    const email1 = Email.create('test1@example.com');
+    const email2 = Email.create('test2@example.com');
+    expect(email1.equals(email2)).toBe(false);
   });
 });

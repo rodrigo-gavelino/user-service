@@ -3,40 +3,49 @@ import {
   Password,
 } from '@core/domain/value-objects/password.vo';
 
-describe('Password', () => {
-  describe('constructor', () => {
-    it('should accept a valid password', () => {
-      const validPasswords = ['Password1!', 'Test@1234', 'Aa123456$'];
+// Dados de exemplo para os testes
+const validPassword = 'Valid123!';
 
-      validPasswords.forEach((password) => {
-        expect(() => new Password(password)).not.toThrow();
-      });
-    });
+describe('Password Creation', () => {
+  it('should create a Password object with a valid password', () => {
+    expect(() => Password.create(validPassword)).not.toThrow();
+    const password = Password.create(validPassword);
+    expect(password).toBeInstanceOf(Password);
+  });
+});
 
-    it('should throw InvalidPasswordError for passwords with less than 8 characters', () => {
-      const shortPassword = 'Pas$1';
-      expect(() => new Password(shortPassword)).toThrow(InvalidPasswordError);
-    });
+describe('Password Validation', () => {
+  it('should throw InvalidPasswordError for empty password', () => {
+    expect(() => Password.create('')).toThrow(InvalidPasswordError);
+  });
 
-    it('should throw InvalidPasswordError for passwords without a number', () => {
-      const passwordWithoutNumber = 'Password!';
-      expect(() => new Password(passwordWithoutNumber)).toThrow(
-        InvalidPasswordError,
-      );
-    });
+  it('should throw InvalidPasswordError for password length less than 8 characters', () => {
+    expect(() => Password.create('Abc1!')).toThrow(InvalidPasswordError);
+  });
 
-    it('should throw InvalidPasswordError for passwords without an uppercase letter', () => {
-      const passwordWithoutUppercase = 'password1!';
-      expect(() => new Password(passwordWithoutUppercase)).toThrow(
-        InvalidPasswordError,
-      );
-    });
+  it('should throw InvalidPasswordError for password without numbers', () => {
+    expect(() => Password.create('Abcdefgh!')).toThrow(InvalidPasswordError);
+  });
 
-    it('should throw InvalidPasswordError for passwords without a special character', () => {
-      const passwordWithoutSpecialChar = 'Password1';
-      expect(() => new Password(passwordWithoutSpecialChar)).toThrow(
-        InvalidPasswordError,
-      );
-    });
+  it('should throw InvalidPasswordError for password without uppercase letters', () => {
+    expect(() => Password.create('abcdefg1!')).toThrow(InvalidPasswordError);
+  });
+
+  it('should throw InvalidPasswordError for password without special characters', () => {
+    expect(() => Password.create('Abcdefg1')).toThrow(InvalidPasswordError);
+  });
+});
+
+describe('Password Equality', () => {
+  it('should return true for equal passwords', () => {
+    const password1 = Password.create(validPassword);
+    const password2 = Password.create(validPassword);
+    expect(password1.equals(password2)).toBe(true);
+  });
+
+  it('should return false for different passwords', () => {
+    const password1 = Password.create('Valid123!');
+    const password2 = Password.create('Another1!');
+    expect(password1.equals(password2)).toBe(false);
   });
 });

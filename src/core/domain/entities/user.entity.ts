@@ -94,10 +94,23 @@ class User {
   }
 
   changeName(newName: string): void {
-    if (newName.trim() === '') {
+    const regexContainsNumber = /\d/;
+    const regexSpecialCharacters = /[^a-zA-Z\s]/;
+    if (
+      newName.trim() === '' ||
+      newName.trim().length < 3 ||
+      newName.trim().length > 20 ||
+      regexContainsNumber.test(newName) ||
+      regexSpecialCharacters.test(newName)
+    ) {
       throw new InvalidUserNameError('O nome não pode ser vazio.');
     }
     this._name = newName;
+  }
+
+  changePassword(newPassword: string): void {
+    const password = Password.create(newPassword); // Assume que Password faz a validação necessária
+    this._password = password;
   }
 
   deactivateUser(): void {

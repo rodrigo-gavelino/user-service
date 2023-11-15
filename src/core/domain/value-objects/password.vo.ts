@@ -1,7 +1,7 @@
 import ValueObject from '@core/shared/abstracts/value-object';
 
 export class Password extends ValueObject<string> {
-  constructor(value: string) {
+  private constructor(value: string) {
     super(value);
     this.validate();
   }
